@@ -1,0 +1,20 @@
+[package]
+name = "async-change-tracker"
+description = "reactive change notifications using futures"
+version = "0.1.0"
+authors = ["Andrew Straw <strawman@astraw.com>"]
+readme = "README.md"
+license = "MIT/Apache-2.0"
+documentation = "https://docs.rs/async-change-tracker/"
+repository = "https://github.com/astraw/async-change-tracker"
+keywords = ["futures", "reactive", "notify", "change", "watch"]
+categories = ["asynchronous", "data-structures"]
+
+[dependencies]
+log = "0.4"
+futures = "0.1"
+parking_lot = "0.6"
+
+[dev-dependencies]
+tokio = "0.1"
+tokio-timer = "0.2"
