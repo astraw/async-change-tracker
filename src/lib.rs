@@ -3,7 +3,9 @@
 //! This is the successor of
 //! [raii-change-tracker](https://crates.io/crates/raii-change-tracker).
 //!
-//! The main item of interest is [`ChangeTracker`](struct.ChangeTracker.html).
+//! The `ChangeTracker<T>` type allows changing an owned value `T` using
+//! closures and notifies listeners just after the closure completes.
+//!
 //! Creating a new with [`ChangeTracker::new(value:
 //! T)`](struct.ChangeTracker.html#method.new) will take ownership of the value
 //! of type `T`. You can then create a futures::Stream (with
