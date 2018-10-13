@@ -1,9 +1,11 @@
 # async-change-tracker - Reactive change notifications using futures. [![Version][version-img]][version-url] [![Doc][doc-img]][doc-url]
 
-The main item of interest is the struct `ChangeTracker`. Create a new
-`ChangeTracker` that takes ownership of an object of type `T`. You can then
-create a futures::Stream (with `get_changes()`) that gets a new value upon
-every change to the value. The value can be changed with the `modify()`
+The `ChangeTracker<T>` type allows changing an owned value `T` using closures
+and notifies listeners just after the closure completes.
+
+Create a new `ChangeTracker` that takes ownership of an object of type `T`. You
+can then create a futures::Stream (with `get_changes()`) that gets a new value
+upon every change to the value. The value can be changed with the `modify()`
 method of `ChangeTracker` and read using the `as_ref()` method.
 
 This is the successor of
