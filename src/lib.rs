@@ -1,8 +1,5 @@
 //! Reactive change notifications using futures.
 //!
-//! This is the successor of
-//! [raii-change-tracker](https://crates.io/crates/raii-change-tracker).
-//!
 //! The `ChangeTracker<T>` type allows changing an owned value `T` using
 //! closures and notifies listeners just after the closure completes.
 //!
@@ -17,30 +14,25 @@
 //!
 //! ## Example
 //!
-//! In this example, all the functionality of `ChangeTracker` is shown. A
-//! [`tokio`](https://crates.io/crates/tokio) runtime is used to execute the
-//! futures.
+//! In this example, the functionality of `ChangeTracker` is shown.
 //!
 //! ```rust
-//! extern crate async_change_tracker;
-//! extern crate futures;
-//! extern crate tokio;
-//!
-//! use futures::Stream;
+//! use futures::stream::StreamExt;
 //!
 //! // Wrap an integer `with ChangeTracker`
 //! let mut change_tracker = async_change_tracker::ChangeTracker::new( 123 );
 //!
-//! // Create an receiver that fires when the value changes
+//! // Create an receiver that fires when the value changes. The channel size
+//! // is 1, meaning at most one change can be buffered before backpressure
+//! // is applied.
 //! let rx = change_tracker.get_changes(1);
 //!
-//! // In this example, upon change, check the old and new value are correct.
-//! let rx_printer = rx.for_each(|(old_value, new_value)| {
+//! // In this example take a single change and check that the old and new value
+//! // are correct.
+//! let rx_printer = rx.take(1).for_each(|(old_value, new_value)| {
 //!     assert_eq!( old_value, 123);
 //!     assert_eq!( new_value, 124);
-//!     // Here in this example, we return error to abort the stream.
-//!     // In normal usage, typically an `Ok` value would be returned.
-//!     futures::future::err(())
+//!     futures::future::ready(())
 //! });
 //!
 //! // Now, check and then change the value.
@@ -52,10 +44,7 @@
 //! // Wait until the stream is done. In this example, the stream ends due to
 //! // the error we return in the `for_each` closure above. In normal usage,
 //! // typically the stream would finish for a different reason.
-//! match tokio::runtime::current_thread::block_on_all(rx_printer) {
-//!     Ok(_) => panic!("should not get here"),
-//!     Err(()) => (),
-//! }
+//! futures::executor::block_on(rx_printer);
 //!
 //! // Finally, check that the final value is as expected.
 //! assert!(*change_tracker.as_ref() == 124);
@@ -64,11 +53,8 @@
 
 #[macro_use]
 extern crate log;
-extern crate futures;
-extern crate parking_lot;
 
-use futures::sync::mpsc;
-use futures::Sink;
+use futures::channel::mpsc;
 use parking_lot::Mutex;
 use std::sync::Arc;
 
