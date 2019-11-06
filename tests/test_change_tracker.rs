@@ -98,6 +98,8 @@ fn test_multiple_changes_no_rx() {
 
 #[test]
 fn test_multithreaded_change_tracker() {
+    use futures::task::SpawnExt;
+
     #[derive(Clone, PartialEq, Debug)]
     struct StoreType {
         val: i32,
@@ -131,6 +133,8 @@ fn test_multithreaded_change_tracker() {
         rx_printer.await;
     };
 
-    rt.run(do_all_fut);
+    let join_handle_fut = rt.spawn_with_handle(do_all_fut).unwrap();
+    futures::executor::block_on(join_handle_fut);
+
     assert!(data_store_arc.lock().as_ref().val == 124);
 }

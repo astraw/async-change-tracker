@@ -49,6 +49,14 @@
 //! // Finally, check that the final value is as expected.
 //! assert!(*change_tracker.as_ref() == 124);
 //! ```
+//!
+//! ## Testing
+//!
+//! To test, you need the `thread-pool` feature for the `futures` create:
+//!
+//! ```no-run
+//! cargo test --features "futures/thread-pool"
+//! ```
 #![deny(missing_docs)]
 
 #[macro_use]
