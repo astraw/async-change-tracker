@@ -2,12 +2,14 @@
 
 Reactive change notifications using futures.
 
-The `ChangeTracker<T>` type allows changing an owned value `T` using
-closures and notifies listeners just after the closure completes.
+The `ChangeTracker<T>` type wraps an owned value `T`. Changes to `T` are
+done within a function or closure implementing `FnOnce(&mut T)`. When this
+returns, any changes are sent to listeners using a `futures::Stream`.
 
-Creating a new with [`ChangeTracker::new(value:
-T)`](struct.ChangeTracker.html#method.new) will take ownership of the value
-of type `T`. You can then create a futures::Stream (with
+In slightly more detail, create a `ChangeTracker<T>` with
+[`ChangeTracker::new(value: T)`](struct.ChangeTracker.html#method.new). This
+will take ownership of the value of type `T`. You can then create a
+`futures::Stream` (with
 [`get_changes()`](struct.ChangeTracker.html#method.get_changes)) that emits
 a tuple `(old_value, new_value)` of type `(T, T)` upon every change to the
 owned value. The value can be changed with the
@@ -38,18 +40,26 @@ let rx_printer = rx.take(1).for_each(|(old_value, new_value)| {
 });
 
 // Now, check and then change the value.
-change_tracker.modify(|scoped_store| {
-    assert_eq!(*scoped_store, 123);
-    *scoped_store += 1;
+change_tracker.modify(|mut_ref_value| {
+    assert_eq!(*mut_ref_value, 123);
+    *mut_ref_value += 1;
 });
 
 // Wait until the stream is done. In this example, the stream ends due to
-// the error we return in the `for_each` closure above. In normal usage,
+// the use of `.take(1)` prior to `for_each` above. In normal usage,
 // typically the stream would finish for a different reason.
 futures::executor::block_on(rx_printer);
 
 // Finally, check that the final value is as expected.
 assert!(*change_tracker.as_ref() == 124);
 ```
+
+### Testing
+
+To test, you need the `thread-pool` feature for the `futures` create:
+
+```no-run
+cargo test --features "futures/thread-pool"
+```rust
 
 License: MIT/Apache-2.0
