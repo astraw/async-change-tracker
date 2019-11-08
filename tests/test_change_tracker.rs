@@ -116,7 +116,7 @@ fn test_multithreaded_change_tracker() {
 
     // use multi-threaded runtime
     use futures::executor::ThreadPool;
-    let mut rt = ThreadPool::new().unwrap();
+    let rt = ThreadPool::new().unwrap();
 
     let dsclone = data_store_arc.clone();
     // Create a future to cause a change
