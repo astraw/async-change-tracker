@@ -58,8 +58,8 @@ assert!(*change_tracker.as_ref() == 124);
 
 To test, you need the `thread-pool` feature for the `futures` create:
 
-```no-run
+```
 cargo test --features "futures/thread-pool"
-```rust
+```
 
 License: MIT/Apache-2.0
