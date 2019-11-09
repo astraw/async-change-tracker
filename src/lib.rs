@@ -80,8 +80,10 @@ use std::sync::Arc;
 /// See the module-level documentation for more information and a usage example.
 pub struct ChangeTracker<T> {
     value: T,
-    senders: Arc<Mutex<Vec<mpsc::Sender<(T, T)>>>>,
+    senders: Arc<Mutex<VecSender<T>>>,
 }
+
+type VecSender<T> = Vec<mpsc::Sender<(T, T)>>;
 
 impl<T> ChangeTracker<T>
 where
