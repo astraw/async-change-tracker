@@ -125,8 +125,8 @@ where
             for mut on_changed_tx in senders.drain(0..) {
                 // TODO use .send() here?
                 match on_changed_tx.start_send((orig.clone(), newval.clone())) {
-                    Ok(_) => keep.push(on_changed_tx),
-                    Err(_) => trace!("receiver dropped"),
+                    Ok(_) => {keep.push(on_changed_tx);},
+                    Err(_) => {trace!("receiver dropped");},
                 }
             }
             senders.extend(keep);

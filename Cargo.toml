@@ -14,4 +14,4 @@ edition = "2018"
 [dependencies]
 log = "0.4"
 futures = "0.3.1"
-parking_lot = "0.9"
+parking_lot = "0.10"
