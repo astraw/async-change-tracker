@@ -1,5 +1,13 @@
 # async-change-tracker
 
+
+[![Crates.io](https://img.shields.io/crates/v/async-change-tracker.svg)](https://crates.io/crates/async-change-tracker)
+[![Documentation](https://docs.rs/async-change-tracker/badge.svg)](https://docs.rs/async-change-tracker/)
+[![Crate License](https://img.shields.io/crates/l/async-change-tracker.svg)](https://crates.io/crates/async-change-tracker)
+[![Dependency status](https://deps.rs/repo/github/astraw/async-change-tracker/status.svg)](https://deps.rs/repo/github/astraw/async-change-tracker)
+[![build](https://github.com/astraw/async-change-tracker/workflows/build/badge.svg?branch=main)](https://github.com/astraw/async-change-tracker/actions?query=branch%3Amain)
+
+
 Reactive change notifications using futures.
 
 The `ChangeTracker<T>` type wraps an owned value `T`. Changes to `T` are
