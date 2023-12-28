@@ -5,11 +5,14 @@ on:
     branches: [ '**' ]
   pull_request:
     branches: [ '**' ]
+  schedule:
+    # At 3:25 on Friday.
+    - cron: "25 3 * * 5"
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Run tests
       run: cargo test --features futures/thread-pool
