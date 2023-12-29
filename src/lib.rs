@@ -54,10 +54,10 @@
 //!
 //! ## Testing
 //!
-//! To test, you need the `thread-pool` feature for the `futures` create:
+//! To test:
 //!
 //! ```text
-//! cargo test --features "futures/thread-pool"
+//! cargo test
 //! ```
 #![deny(missing_docs)]
 

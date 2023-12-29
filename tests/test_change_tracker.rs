@@ -115,7 +115,7 @@ fn test_multithreaded_change_tracker() {
     });
 
     // use multi-threaded runtime
-    use futures::executor::ThreadPool; // use `cargo test --features "futures/thread-pool"`
+    use futures::executor::ThreadPool;
     let rt = ThreadPool::new().unwrap();
 
     let dsclone = data_store_arc.clone();

@@ -64,10 +64,10 @@ assert!(*change_tracker.as_ref() == 124);
 
 ### Testing
 
-To test, you need the `thread-pool` feature for the `futures` create:
+To test:
 
 ```
-cargo test --features "futures/thread-pool"
+cargo test
 ```
 
 License: MIT/Apache-2.0
