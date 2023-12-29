@@ -1,7 +1,10 @@
-use std::{cell::RefCell, rc::Rc, sync::Arc};
+use std::{
+    cell::RefCell,
+    rc::Rc,
+    sync::{Arc, RwLock},
+};
 
 use futures::stream::StreamExt;
-use parking_lot::Mutex;
 
 use async_change_tracker::ChangeTracker;
 
@@ -107,7 +110,7 @@ fn test_multithreaded_change_tracker() {
 
     let data_store = ChangeTracker::new(StoreType { val: 123 });
     let rx = data_store.get_changes(1);
-    let data_store_arc = Arc::new(Mutex::new(data_store));
+    let data_store_arc = Arc::new(RwLock::new(data_store));
     let rx_printer = rx.take(1).for_each(|(old_value, new_value)| {
         assert!(old_value.val == 123);
         assert!(new_value.val == 124);
@@ -121,8 +124,7 @@ fn test_multithreaded_change_tracker() {
     let dsclone = data_store_arc.clone();
     // Create a future to cause a change
     let cause_change = async move {
-        let mut data_store = dsclone.lock();
-        data_store.modify(|scoped_store| {
+        dsclone.write().unwrap().modify(|scoped_store| {
             assert!((*scoped_store).val == 123);
             (*scoped_store).val += 1;
         });
@@ -136,5 +138,5 @@ fn test_multithreaded_change_tracker() {
     let join_handle_fut = rt.spawn_with_handle(do_all_fut).unwrap();
     futures::executor::block_on(join_handle_fut);
 
-    assert!(data_store_arc.lock().as_ref().val == 124);
+    assert!(data_store_arc.read().unwrap().as_ref().val == 124);
 }

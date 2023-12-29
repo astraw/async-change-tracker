@@ -65,8 +65,7 @@
 extern crate log;
 
 use futures::channel::mpsc;
-use parking_lot::Mutex;
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 /// Tracks changes to data. Notifies listeners via a `futures::Stream`.
 ///
@@ -80,7 +79,7 @@ use std::sync::Arc;
 /// See the module-level documentation for more information and a usage example.
 pub struct ChangeTracker<T> {
     value: T,
-    senders: Arc<Mutex<VecSender<T>>>,
+    senders: Arc<RwLock<VecSender<T>>>,
 }
 
 type VecSender<T> = Vec<mpsc::Sender<(T, T)>>;
@@ -106,7 +105,7 @@ where
     pub fn new(value: T) -> Self {
         Self {
             value,
-            senders: Arc::new(Mutex::new(Vec::new())),
+            senders: Arc::new(RwLock::new(Vec::new())),
         }
     }
 
@@ -118,7 +117,7 @@ where
     /// To remove a listener, drop the Receiver.
     pub fn get_changes(&self, capacity: usize) -> mpsc::Receiver<(T, T)> {
         let (tx, rx) = mpsc::channel(capacity);
-        let mut senders = self.senders.lock();
+        let mut senders = self.senders.write().unwrap();
         senders.push(tx);
         rx
     }
@@ -132,7 +131,7 @@ where
         f(&mut self.value);
         let newval = self.value.clone();
         {
-            let mut senders = self.senders.lock();
+            let mut senders = self.senders.write().unwrap();
             let mut keep = vec![];
             for mut on_changed_tx in senders.drain(0..) {
                 // TODO use .send() here?
