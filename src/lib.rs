@@ -85,6 +85,18 @@ pub struct ChangeTracker<T> {
 
 type VecSender<T> = Vec<mpsc::Sender<(T, T)>>;
 
+impl<T> Clone for ChangeTracker<T>
+where
+    T: Clone,
+{
+    fn clone(&self) -> Self {
+        Self {
+            value: self.value.clone(),
+            senders: self.senders.clone(),
+        }
+    }
+}
+
 impl<T> ChangeTracker<T>
 where
     T: Clone,
