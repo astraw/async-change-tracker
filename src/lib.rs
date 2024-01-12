@@ -74,7 +74,10 @@ use std::sync::{Arc, RwLock};
 /// calling `as_ref()`. Read and write access can be gained by calling the
 /// `modify` method.
 ///
-/// Subsribe to changes by calling `get_changes`.
+/// Subscribe to changes by calling `get_changes`.
+///
+/// Note that this does not implement Clone because typically this is not what
+/// you want. Rather, you should wrap ChangeTracker in `Arc<RwLock>` or similar.
 ///
 /// See the module-level documentation for more information and a usage example.
 pub struct ChangeTracker<T> {
@@ -83,18 +86,6 @@ pub struct ChangeTracker<T> {
 }
 
 type VecSender<T> = Vec<mpsc::Sender<(T, T)>>;
-
-impl<T> Clone for ChangeTracker<T>
-where
-    T: Clone,
-{
-    fn clone(&self) -> Self {
-        Self {
-            value: self.value.clone(),
-            senders: self.senders.clone(),
-        }
-    }
-}
 
 impl<T> ChangeTracker<T>
 where
