@@ -139,8 +139,13 @@ where
                     Ok(_) => {
                         keep.push(on_changed_tx);
                     }
-                    Err(_) => {
-                        trace!("receiver dropped");
+                    Err(e) => {
+                        if e.is_disconnected() {
+                            trace!("receiver dropped");
+                        } else {
+                            trace!("error on start_send: {e}");
+                            keep.push(on_changed_tx);
+                        }
                     }
                 }
             }
