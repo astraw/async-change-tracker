@@ -9,11 +9,11 @@ documentation = "https://docs.rs/async-change-tracker/"
 repository = "https://github.com/astraw/async-change-tracker"
 keywords = ["futures", "reactive", "notify", "change", "watch"]
 categories = ["asynchronous", "data-structures"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-log = "0.4"
 futures = "0.3.1"
+tracing = "0.1.40"
 
 [dev-dependencies]
 futures = { version = "0.3.1", features = ["thread-pool"] }

@@ -61,9 +61,6 @@
 //! ```
 #![deny(missing_docs)]
 
-#[macro_use]
-extern crate log;
-
 use futures::channel::mpsc;
 use std::sync::{Arc, RwLock};
 
@@ -132,9 +129,9 @@ where
                     }
                     Err(e) => {
                         if e.is_disconnected() {
-                            trace!("receiver dropped");
+                            tracing::trace!("receiver dropped");
                         } else {
-                            trace!("error on start_send: {e}");
+                            tracing::trace!("error on start_send: {e}");
                             keep.push(on_changed_tx);
                         }
                     }
