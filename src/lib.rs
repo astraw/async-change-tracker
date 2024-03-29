@@ -117,13 +117,13 @@ where
     {
         let orig = self.value.clone();
         f(&mut self.value);
-        let newval = self.value.clone();
+        let new_value = self.value.clone();
         {
             let mut senders = self.senders.write().unwrap();
             let mut keep = vec![];
             for mut on_changed_tx in senders.drain(0..) {
                 // TODO use .send() here?
-                match on_changed_tx.start_send((orig.clone(), newval.clone())) {
+                match on_changed_tx.start_send((orig.clone(), new_value.clone())) {
                     Ok(_) => {
                         keep.push(on_changed_tx);
                     }
